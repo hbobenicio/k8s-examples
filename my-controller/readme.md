@@ -19,4 +19,6 @@ go mod vendor
 # you'll be prompted for confirming your kubectl context which would be used as a target
 ./script/up.sh
 
+# opcional: run this to check my-controller logs
+kubectl -n my-controller logs deployments/my-controller -f
 ```

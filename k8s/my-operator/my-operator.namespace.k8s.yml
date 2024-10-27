@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: my-operator
-  labels:
-    name: my-operator
-    app: my-operator

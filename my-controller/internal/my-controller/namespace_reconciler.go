@@ -1,4 +1,4 @@
-package myoperator
+package mycontroller
 
 import (
 	"context"

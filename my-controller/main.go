@@ -14,7 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	myoperator "myoperator/internal/my-operator"
+	myoperator "myoperator/internal/my-controller"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 	//     - graceful shutdown: does controller-runtime Start already does that?
 	//     - leader-elect: Enabling this will ensure there is only one active controller manager
 	rootLoggerSetup()
-	entryLog := log.Log.WithName("my-operator")
+	entryLog := log.Log.WithName("my-controller")
 
 	// Setup a Manager
 	entryLog.Info("setting up manager")

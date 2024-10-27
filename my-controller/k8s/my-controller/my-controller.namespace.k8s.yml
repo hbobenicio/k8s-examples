@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: my-controller
+  labels:
+    name: my-controller
+    app: my-controller

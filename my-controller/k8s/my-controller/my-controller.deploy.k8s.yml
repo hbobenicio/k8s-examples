@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  my-operator
-  namespace: my-operator
+  name:  my-controller
+  namespace: my-controller
   labels:
-    app:  my-operator
+    app:  my-controller
 spec:
   selector:
     matchLabels:
-      app: my-operator
+      app: my-controller
   replicas: 2
   # strategy:
   #   rollingUpdate:
@@ -18,18 +18,17 @@ spec:
   template:
     metadata:
       labels:
-        app:  my-operator
+        app:  my-controller
     spec:
-      serviceAccountName: my-operator-serviceaccount
+      serviceAccountName: my-controller-serviceaccount
       restartPolicy: Always
       containers:
-      - name:  my-operator
-        # image:  'localhost:5000/my-operator:latest'
-        image:  'my-operator:0.0.0-dev'
+      - name:  my-controller
+        image:  'my-controller:0.0.0-dev'
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
-          name:  my-operator
+          name:  my-controller
         resources:
           requests:
             cpu: 100m

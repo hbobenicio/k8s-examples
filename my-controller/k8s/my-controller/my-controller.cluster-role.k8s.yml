@@ -1,10 +1,9 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: my-operator:controller:namespace-controller
+  name: my-controller:controller:namespace-controller
   labels:
-    app: my-operator
-    my-operator-controller: namespace-controller
+    app: my-controller
   annotations:
     rbac.authorization.kubernetes.io/autoupdate: "true"
 rules:
