@@ -1,4 +1,4 @@
-module myoperator
+module github.com/hbobenicio/k8s-examples/my-controller
 
 go 1.23.1
 

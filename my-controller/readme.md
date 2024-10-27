@@ -2,6 +2,27 @@
 
 A simple controller example. No kubebuilder or operator-sdk boilerplate gatekeeping.
 
+> First you have a complex problem.
+>
+> Then in order to control the complexity you just hide it under the carpet with a bad abstraction,
+> instead of really understanding the problem and how to solve it.
+>
+> Now you have two problems.
+
+## What is the big picture?
+
+This project demonstrates how to create a really simple custom controller called `my-controller`.
+
+This controller watches for `v1.Namespace` resources and delegates it to
+our own custom reconciler called `NamespaceReconciler`.
+
+On changes our reconciler just ensures the presence of a really factual label to be present on all objects.
+
+After deployment you can follow the controller logs see what is going on.
+
+Optionally you can check the namespaces after the controller work is done to see what kind of annotation it creates,
+or maybe you take a shortcut and read the sources to find out. Consider it a homework.
+
 ## Local minikube/docker step-by-step setup
 
 ```bash
