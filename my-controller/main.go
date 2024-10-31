@@ -46,7 +46,7 @@ func run() error {
 		return fmt.Errorf("unable to set up overall controller manager: %w", err)
 	}
 
-	// Setup a new controller to reconcile ReplicaSets
+	// Setup a new controller to reconcile Namespaces
 	logger.Info("setting up controller...")
 	ctrl, err := controller.New("namespace-controller", mgr, controller.Options{
 		Reconciler: &mycontroller.NamespaceReconciler{Client: mgr.GetClient()},
@@ -55,7 +55,7 @@ func run() error {
 		return fmt.Errorf("unable to set up individual controller: %w", err)
 	}
 
-	// Watch ReplicaSets and enqueue ReplicaSet object key
+	// Watch Namespaces and enqueue Namespace object key
 	logger.Info("setting up watches...")
 	if err := ctrl.Watch(source.Kind(mgr.GetCache(), &v1.Namespace{}, &handler.TypedEnqueueRequestForObject[*v1.Namespace]{})); err != nil {
 		return fmt.Errorf("unable to watch namespaces: %w", err)
@@ -85,6 +85,10 @@ func loggingSetup() {
 	}
 
 	//TODO get replica ID from uname syscall
+	// hostname, err := os.Hostname()
+	// if err != nil {
+	// 	log.Log.Error(err, "failed to get hostname")
+	// }
 
 	rootLogger := zap.New(zap.UseFlagOptions(rootLoggerOpts)) //.
 	// WithValues("namespace", os.Getenv("K8S_NAMESPACE")).
