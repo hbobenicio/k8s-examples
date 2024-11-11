@@ -17,3 +17,9 @@ rules:
       - list
       - update
       - patch
+  - apiGroups:
+      - 'coordination.k8s.io'
+    resources:
+      - leases
+    verbs:
+      - '*'

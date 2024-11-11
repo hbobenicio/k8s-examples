@@ -9,12 +9,12 @@ spec:
   selector:
     matchLabels:
       app: my-controller
-  replicas: 2
-  # strategy:
-  #   rollingUpdate:
-  #     maxSurge: 25%
-  #     maxUnavailable: 25%
-  #   type: RollingUpdate
+  replicas: 2  #NOTE 1 for primary, the other replicas will work as standby's 
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:

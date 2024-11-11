@@ -41,7 +41,16 @@ func run() error {
 
 	// Setup a Manager
 	logger.Info("setting up manager...")
-	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{Logger: logger})
+	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
+		Logger: logger,
+
+		// this leader election will create a k8s resource called lease (not actually a lock)
+		// this lease is shared between instances and is used to elect a leader.
+		// the leader will be the only one receiving reconcile events for declared watches of your manager (by default)
+		// the other instances will work as standby's
+		LeaderElection:   true,
+		LeaderElectionID: "my-controller-lease", // check it with kubectl -n my-controller get leases
+	})
 	if err != nil {
 		return fmt.Errorf("unable to set up overall controller manager: %w", err)
 	}
@@ -49,7 +58,15 @@ func run() error {
 	// Setup a new controller to reconcile Namespaces
 	logger.Info("setting up controller...")
 	ctrl, err := controller.New("namespace-controller", mgr, controller.Options{
-		Reconciler: &mycontroller.NamespaceReconciler{Client: mgr.GetClient()},
+		Reconciler: &mycontroller.NamespaceReconciler{
+			Client: mgr.GetClient(),
+		},
+
+		// MaxConcurrentReconciles is the maximum number of concurrent Reconciles which can be run. Defaults to 1
+		// MaxConcurrentReconciles: ...,
+
+		// NeedLeaderElection indicates whether the controller needs to use leader election. Defaults to true
+		// NeedLeaderElection: ...,
 	})
 	if err != nil {
 		return fmt.Errorf("unable to set up individual controller: %w", err)
@@ -57,8 +74,11 @@ func run() error {
 
 	// Watch Namespaces and enqueue Namespace object key
 	logger.Info("setting up watches...")
-	if err := ctrl.Watch(source.Kind(mgr.GetCache(), &v1.Namespace{}, &handler.TypedEnqueueRequestForObject[*v1.Namespace]{})); err != nil {
-		return fmt.Errorf("unable to watch namespaces: %w", err)
+	{
+		namespaceSource := source.Kind(mgr.GetCache(), &v1.Namespace{}, &handler.TypedEnqueueRequestForObject[*v1.Namespace]{})
+		if err := ctrl.Watch(namespaceSource); err != nil {
+			return fmt.Errorf("unable to watch namespaces: %w", err)
+		}
 	}
 
 	logger.Info("setting up health/liveness probe...")
@@ -71,6 +91,7 @@ func run() error {
 	}
 
 	logger.Info("setup is done.")
+
 	logger.Info("starting manager...")
 	if err := mgr.Start(signals.SetupSignalHandler()); err != nil {
 		return fmt.Errorf("unable to start manager: %w", err)
