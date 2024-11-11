@@ -15,5 +15,6 @@ RUN GOMAXPROCS=4 CGO_ENABLED=0 \
 
 FROM scratch
 WORKDIR /app
+ENV GOMAXPROCS=4
 COPY --from=builder /usr/src/app/my-controller ./
 CMD ["./my-controller"]
