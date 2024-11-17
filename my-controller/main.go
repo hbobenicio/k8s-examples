@@ -14,6 +14,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
+	metricsserver "sigs.k8s.io/controller-runtime/pkg/metrics/server"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
 	mycontroller "github.com/hbobenicio/k8s-examples/my-controller/internal/my-controller"
@@ -42,7 +43,11 @@ func run() error {
 	// Setup a Manager
 	logger.Info("setting up manager...")
 	mgr, err := manager.New(config.GetConfigOrDie(), manager.Options{
-		Logger: logger,
+		Logger:                 logger,
+		HealthProbeBindAddress: ":8081",
+		Metrics: metricsserver.Options{
+			BindAddress: ":8082",
+		},
 
 		// this leader election will create a k8s resource called lease (not actually a lock)
 		// this lease is shared between instances and is used to elect a leader.
